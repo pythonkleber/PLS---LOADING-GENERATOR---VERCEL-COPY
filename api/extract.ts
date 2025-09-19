@@ -62,7 +62,13 @@ If no table is found, return an object with empty 'headers' and 'rows' arrays.`,
             },
         });
         
-        const jsonText = response.text.trim();
+        const text = response.text;
+        if (!text) {
+            console.error("Gemini API returned an empty or undefined text response.");
+            return res.status(500).json({ error: "AI model returned an empty response. This may be due to content safety filters or other issues." });
+        }
+        
+        const jsonText = text.trim();
         const result = JSON.parse(jsonText);
         
         return res.status(200).json(result);
